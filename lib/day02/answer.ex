@@ -27,13 +27,13 @@ defmodule Aoc2020.Day02.Answer do
   end
 
   defp test_char_limit([lower, upper, letter, password]) do
-      hit_count =
-        password
-        |> to_charlist()
-        |> Enum.filter(fn char -> char == letter end)
-        |> Enum.count()
+    hit_count =
+      password
+      |> to_charlist()
+      |> Enum.filter(fn char -> char == letter end)
+      |> Enum.count()
 
-      hit_count >= lower && hit_count <= upper
+    hit_count >= lower && hit_count <= upper
   end
 
   defp test_char_positions([first, second, letter, password]) do
