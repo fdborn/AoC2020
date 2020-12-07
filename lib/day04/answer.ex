@@ -25,9 +25,7 @@ defmodule Aoc2020.Day04.Answer do
   end
 
   defp valid_passport?(passport, validators) do
-    Enum.reduce(validators, true, fn validator, is_valid? ->
-      is_valid? && validator.(passport)
-    end)
+    Enum.all?(validators, &Kernel.apply(&1, [passport]))
   end
 
   defp valid_format?(%{
