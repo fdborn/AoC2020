@@ -4,8 +4,7 @@ defmodule Aoc2020.Day05.Answer do
 
   def part1 do
     get_input!()
-    |> Enum.map(fn [row, column] -> [get_row(row), get_column(column)] end)
-    |> Enum.map(fn [row, column] -> row * 8 + column end)
+    |> Enum.map(fn [row, column] -> get_row(row) * 8 + get_column(column) end)
     |> Enum.sort()
     |> List.last()
   end
