@@ -39,7 +39,7 @@ defmodule Aoc2020.Day05.Answer do
   defp approx_index(_, [], _), do: :no_result
 
   defp approx_index(range, [instruction | rest], {lowerInstruction, upperInstruction} = rules) do
-    [lower, upper] = Enum.chunk_every(range, trunc(Enum.count(range) / 2))
+    [lower, upper] = Enum.chunk_every(range, round(Enum.count(range) / 2))
 
     new_range =
       case instruction do
