@@ -24,7 +24,6 @@ defmodule Aoc2020.Day09.Answer do
     {min, max} =
       get_input!()
       |> find_consecutive_summands(part1())
-      |> List.flatten()
       |> Enum.min_max()
 
     min + max
