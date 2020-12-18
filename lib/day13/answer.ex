@@ -14,27 +14,6 @@ defmodule Aoc2020.Day13.Answer do
     lowest_wait_time * line_number
   end
 
-  def part2(input) when is_binary(input), do: part2(get_input!(input))
-
-  def part2(input) do
-    {_, lines} = input
-
-    lines
-    |> Enum.with_index()
-    |> Enum.filter(fn {value, _} -> value != :invalid end)
-    |> Enum.sort()
-    |> Enum.reverse()
-    |> find_valid_sequence()
-  end
-
-  def find_valid_sequence([{line_number, offset} | rest]) do
-    result =
-      Stream.iterate(0, &Kernel.+(&1, line_number))
-      |> Enum.find(&matches_all?(&1 - offset, rest))
-
-    result - offset
-  end
-
   def matches_all?(_, []), do: true
 
   def matches_all?(departure, [{line_number, offset} | rest])
@@ -43,24 +22,42 @@ defmodule Aoc2020.Day13.Answer do
 
   def matches_all?(_, _), do: false
 
-  def get_input!(input \\ "") do
-    """
-    0
-    17,x,13,19
-    """
+  def part2() do
+    {_, lines} = get_input!()
 
-    """
-    1337
-    1789,37,47,1889
-    """
+    {remainder, mod} =
+      lines
+      |> Enum.with_index()
+      |> Enum.filter(&Kernel.!=(elem(&1, 0), :invalid))
+      |> Enum.sort()
+      |> Enum.reverse()
+      |> Enum.map(fn {line, offset} ->
+        {offset, line}
+      end)
+      |> reduce_congruent()
 
-    """
-    939
-    7,13,x,x,59,x,31,19
-    """
+    mod - remainder
+  end
 
+  # SHOULD work for the test input but doesn't, since its way too slow
+  defp reduce_congruent([identity | []]), do: identity
+
+  defp reduce_congruent([{remainder, mod} | rest]) do
+    {condition_rem, condition_mod} = reduce_congruent(rest)
+
+    multiplier =
+      Stream.iterate(0, &Kernel.+(&1, 1))
+      |> Enum.find(fn n ->
+        test_remainder = rem(condition_rem + n * condition_mod, mod)
+        test_remainder == remainder
+      end)
+
+    {condition_rem + multiplier * condition_mod, condition_mod * mod}
+  end
+
+  def get_input!() do
     [timestamp, lines_string] =
-    "1\n" <> input
+      File.read!("input/day13.txt")
       |> String.split("\n", trim: true)
 
     lines =
